@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<title>Leaflet Map</title>
+
+<head>
+	
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+	
+	<script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+		
+	<link rel="stylesheet" href="./vanillaSelectBox.css">
+	<script src="./vanillaSelectBox.js"></script>
+	
+	
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	
+	
+	
+	<style>
+
+		
+		#demo-ajax {
+			font-size: 14px;
+			z-index: 1;
+			position: absolute; 
+			left: 50px;
+			width: 300px;
+			display = block;	
+		}
+		
+	
+		html, body {
+			height: 100%;
+			width: 100%;
+			margin:0; 
+			padding:0; 
+			border:none;
+		}
+		
+		#map {
+			width: 100%;
+			height: 100%;
+			position: fixed;
+		}
+		
+		.vsb-main button
+		{
+			max-width: 400px;
+			width: 400px;
+		}
+		
+		.marker-cluster div {
+			width: 30px;
+			height: 30px;
+			margin-left: 5px;
+			margin-top: 5px;
+
+			text-align: center;
+			border-radius: 30px;
+			font: 18px "Helvetica Neue", Arial, Helvetica, sans-serif;
+		}
+		
+		.marker-cluster-small {
+			background-color: green; 
+		}
+		
+		.marker-cluster-medium {
+			background-color: orange; 
+		}
+		
+		.marker-cluster-large {
+			background-color: red; 
+		}
+		
+	
+
+	</style>
+	
+</head> 
+
+
+	
+
+	   
+
+
+<body>
+	<!-- Our web map and content will go here -->
+	
+
+	<div style="font-size: 14px bold;
+			z-index: 1;
+			position: absolute; 
+			left: 60px;
+			background-color: blue;
+			width: 100px;
+			display = block;"></div>
+			
+	<div id="demo-ajax">a</div>
+	<div id="demo-ajax1" style="left:500px;"></div>
+	<div id="map" style=""></div>
+
+	
+
+	
+	
+	
+
+<script>
+
+
+
+$('document').ready(function(){
+	var a = document.getElementsByClassName('leaflet-control-attribution leaflet-control').item(0);	
+	a.setAttribute("style","width:0px; height:0px");
+	//a.style.width = '0px'
+	
+	document.getElementsByClassName('vsb-main').item(0).setAttribute("style","width:200px");	
+	
+   });
+
+
+
+
+// Web map code goes here
+var map = L.map('map', {
+    center: [42.362432, -71.086086],
+    zoom: 14
+});
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {}).addTo(map);
+
+
+
+// Null variable that will hold our MarkerJsonData
+var MarkerPoints = null;
+
+var MarkerJsonData = 
+<!-- { -->
+    <!-- "features": [ -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST01","id": "SB","name": "Starbucks","coordinates": [-71.047749, 42.343884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST012","id": "SB","name": "Starbucks","coordinates": [-71.047749, 42.343884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST02","id": "SB","name": "Starbucks","coordinates": [-71.107749, 42.3764884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST03","id": "SB","name": "Starbucks","coordinates": [-71.07749, 42.365984]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST04","id": "SB","name": "Starbucks","coordinates": [-71.077749, 42.366884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST05","id": "SB","name": "Starbucks","coordinates": [-71.097749, 42.367884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST06","id": "SB","name": "Starbucks","coordinates": [-71.047749, 42.368884]}}, -->
+					
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST07","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.083372, 42.359104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST08","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.072372, 42.349104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST09","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.081372, 42.359104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST10","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.084372, 42.369104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST11","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.085372, 42.359104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST12","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.086372, 42.359104]}}, -->
+					
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST13","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083172, 42.362104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083272, 42.365204]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083372, 42.365304]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083472, 42.365404]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083572, 42.365504]}} -->
+				<!-- ] -->
+<!-- }; -->
+
+{
+    "features": [
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10001"	,"WOType": "BRKD"	,"AssetCode": "A10001"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10002"	,"WOType": "BRKD"	,"AssetCode": "A10002"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10003"	,"WOType": "BRKD"	,"AssetCode": "A10003"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10004"	,"WOType": "CORR"	,"AssetCode": "A10004"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10005"	,"WOType": "BRKD"	,"AssetCode": "A10005"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10006"	,"WOType": "BRKD"	,"AssetCode": "A10006"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10007"	,"WOType": "CORR"	,"AssetCode": "A10007"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10008"	,"WOType": "PM"	,"AssetCode": "A10008"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 		[-0.1769,51.5167]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10009"	,"WOType": "BRKD"	,"AssetCode": "A20001"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,"coordinates": 	[-0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10010"	,"WOType": "BRKD"	,"AssetCode": "A20002"	,"AssetClass": "Coach"	,"Location": "London's Kings Cross Station"	,"coordinates": 	[-0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10011"	,"WOType": "CORR"	,"AssetCode": "A20003"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,"coordinates": 	[-0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10012"	,"WOType": "BRKD"	,"AssetCode": "A20004"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,"coordinates": 	[-0.1246,51.5347]	}},
+								
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10013"	,"WOType": "BRKD"	,"AssetCode": "A30001"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10014"	,"WOType": "CORR"	,"AssetCode": "A30002"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10015"	,"WOType": "CORR"	,"AssetCode": "A30003"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10016"	,"WOType": "BRKD"	,"AssetCode": "A30004"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10017"	,"WOType": "BRKD"	,"AssetCode": "A30005"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10018"	,"WOType": "CORR"	,"AssetCode": "A30006"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10019"	,"WOType": "CORR"	,"AssetCode": "A30007"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10020"	,"WOType": "BRKD"	,"AssetCode": "A30008"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10021"	,"WOType": "CORR"	,"AssetCode": "A30009"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10022"	,"WOType": "BRKD"	,"AssetCode": "A30011"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10023"	,"WOType": "BRKD"	,"AssetCode": "A30012"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10024"	,"WOType": "CORR"	,"AssetCode": "A30013"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10025"	,"WOType": "PM"	,"AssetCode": "A30014"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10026"	,"WOType": "BRKD"	,"AssetCode": "A40001"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,"coordinates": 	[-0.0028,51.5415]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10027"	,"WOType": "CORR"	,"AssetCode": "A40002"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,"coordinates": 	[-0.0028,51.5415]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10028"	,"WOType": "BRKD"	,"AssetCode": "A40003"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,"coordinates": 	[-0.0028,51.5415]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10029"	,"WOType": "BRKD"	,"AssetCode": "A50001"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,"coordinates": 	[-0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10030"	,"WOType": "CORR"	,"AssetCode": "A50002"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,"coordinates": 	[-0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10031"	,"WOType": "PM"	,"AssetCode": "A50003"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,"coordinates": 	[-0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10032"	,"WOType": "BRKD"	,"AssetCode": "A50004"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,"coordinates": 	[-0.0324,51.4765]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10033"	,"WOType": "BRKD"	,"AssetCode": "A70001"	,"AssetClass": "Train"	,"Location": "Victoria Station"	,"coordinates": 	[-0.1439,51.4952]	}},	
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10034"	,"WOType": "BRKD"	,"AssetCode": "A70002"	,"AssetClass": "Train"	,"Location": "Victoria Station"	,"coordinates": 	[-0.1439,51.4952]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10035"	,"WOType": "BRKD"	,"AssetCode": "A60001"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,"coordinates": 	[-0.1123,51.5032]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10036"	,"WOType": "CORR"	,"AssetCode": "A60002"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,"coordinates": 	[-0.1123,51.5032]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10037"	,"WOType": "BRKD"	,"AssetCode": "A60003"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,"coordinates": 	[-0.1123,51.5032]	}}
+
+]};
+
+
+
+
+
+var WoType=[];
+
+
+for (var i = 0; i < MarkerJsonData.features.length; i++) 
+{
+	WoType.push(MarkerJsonData.features[i].geometry.WOType)
+}
+
+WoType = WoType.filter(function (x, i, a) { 
+    return a.indexOf(x) == i; 
+});
+
+
+
+var WoType_ARR = []
+
+for (var i = 0; i < WoType.length; i++) 
+{
+	var jsonArg = new Object();
+    jsonArg.id = i;
+    jsonArg.name = WoType[i];
+	
+	WoType_ARR.push(jsonArg)
+}
+
+<!-- console.log((WoType_ARR)) -->
+<!-- console.log(JSON.stringify(WoType_ARR).replace('[','{').replace(']','}')) -->
+
+
+
+// initial load all markers
+MarkerPoints = L.geoJson(MarkerJsonData, {
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup
+		(
+			feature.geometry.Location
+			+'<br> WO Code - '+ feature.geometry.WOCode
+			+'<br> WO Type - '+ feature.geometry.WOType
+			+'<br> Asset - '+ feature.geometry.AssetCode
+			+'<br> Asset Type - '+ feature.geometry.AssetClass
+		
+		);
+		
+		layer.on('mouseover', function (e) {
+            this.openPopup();
+        });
+		layer.on('mouseout', function (e) {
+            this.closePopup();
+        });
+		
+    }
+})
+
+
+const yellow = 5;
+const red = 10;
+
+var MarkerCluster = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    maxClusterRadius: 60,
+    iconCreateFunction: function (cluster) {
+        var childCount = cluster.getChildCount();
+        var c = ' marker-cluster-';
+        if (childCount < yellow) {
+            c += 'small';
+        } else if (childCount < red) {
+            c += 'medium';
+        } else {
+            c += 'large';
+        }
+
+        return new L.DivIcon({
+            html: '<div><span>' + childCount + '</span></div>',
+            className: 'marker-cluster' + c,
+            iconSize: new L.Point(40, 40)
+        });
+    }
+});
+	
+MarkerCluster.addLayer(MarkerPoints)
+map.addLayer(MarkerCluster);
+map.fitBounds(MarkerCluster.getBounds());
+
+MarkerCluster.on('clustermouseover', function (a) {
+    var html = ''; 
+    var markers = a.layer.getAllChildMarkers();
+	var arr = [];
+	//console.log(markers)
+	//console.log(_.uniqBy(markers, 'geometry'))
+	
+    for (var i = 0; i < markers.length; i++) {
+		
+		//console.log(markers[i].feature.geometry)
+		arr.push(markers[i].feature.geometry)
+        var name = ''//markers[i].feature.geometry.WOCode + '<br>';
+        html += name;
+    }
+	//console.log(arr)
+	
+	
+	var tempResult = {}
+
+	for(let { WOType } of arr)
+	  tempResult[WOType] = { 
+		  WOType,
+		  Count: tempResult[WOType] ? tempResult[WOType].Count + 1 : 1
+	  }      
+
+	let result = Object.values(tempResult)
+
+	//console.log(JSON.stringify(result))
+	
+	arrItems = result
+	
+	
+	 // EXTRACT VALUE FOR TABLE HEADER.
+            var col = [];
+            for (var i = 0; i < arrItems.length; i++) {
+                for (var key in arrItems[i]) {
+                    if (col.indexOf(key) === -1) {
+                        col.push(key);
+                    }
+                }
+            }
+
+            // CREATE DYNAMIC TABLE.
+            var table = document.createElement("table");
+
+            // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+            var tr = table.insertRow(-1);                   // TABLE ROW.
+
+            for (var i = 0; i < col.length; i++) {
+                var th = document.createElement("th");      // TABLE HEADER.
+                th.innerHTML = col[i];
+                tr.appendChild(th);
+            }
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            for (var i = 0; i < arrItems.length; i++) {
+
+                tr = table.insertRow(-1);
+
+                for (var j = 0; j < col.length; j++) {
+                    var tabCell = tr.insertCell(-1);
+                    tabCell.innerHTML = arrItems[i][col[j]];
+                }
+            }
+			
+			var row = table.insertRow(0);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			cell1.innerHTML = "<h3>Total Work Orders - </h3>";
+			cell2.innerHTML = "<h3>"+ markers.length + "</h3>";	
+    
+			map.openPopup( table, a.layer.getLatLng());
+			
+			
+			
+});
+
+
+MarkerCluster.on('clustermouseout', function (e) {
+  map.closePopup();
+});
+
+
+
+// Function to remove markers
+function removeAllMarkers() {
+    MarkerCluster.removeLayer(MarkerPoints)
+	map.removeLayer(MarkerCluster);
+};
+
+// Function to add markers
+function addmarkers(filter_list) {
+    MarkerCluster.removeLayer(MarkerPoints)
+	map.removeLayer(MarkerCluster);
+	
+
+
+	
+    // add GeoJSON layer to the map once the file is loaded
+    MarkerPoints = L.geoJson(MarkerJsonData, {
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup
+					(
+						feature.geometry.Location
+						+'<br> WO Code - '+ feature.geometry.WOCode
+						+'<br> WO Type - '+ feature.geometry.WOType
+						+'<br> Asset - '+ feature.geometry.AssetCode
+						+'<br> Asset Type - '+ feature.geometry.AssetClass
+					
+					);
+					
+					
+			layer.on('mouseover', function (e) {
+				this.openPopup();
+			});
+			layer.on('mouseout', function (e) {
+				this.closePopup();
+			});
+		
+        },
+        filter: function (feature, layer) {
+            //return feature.geometry.name == "MOD"
+
+            if (filter_list.length > 0) {
+                for (i = 0; i < filter_list.length; i++) {
+                    if (feature.geometry.WOType === filter_list[i]) {
+                        return true;
+                    }
+                }
+
+            } else {
+                return true;
+            }
+
+        }
+    })
+	
+	MarkerCluster.addLayer(MarkerPoints)
+	map.addLayer(MarkerCluster);
+	map.fitBounds(MarkerCluster.getBounds());
+	
+
+};
+
+
+
+
+
+
+var dropdown_status = "x";
+
+var filter_list_data = WoType_ARR;
+
+
+buildSelect(filter_list_data, "demo-ajax", "demo-ajax-select");
+var peopleVSB = new vanillaSelectBox("#demo-ajax-select", {
+    "maxHeight": 200,
+    "search": true,
+    translations: {
+        "all": "All",
+        "items": "WO Types Selected"
+    }
+});
+
+peopleVSB.setValue('all');
+
+
+
+document.getElementById("btn-group-#demo-ajax-select").addEventListener("click", dropdown_open);
+
+function dropdown_open() {
+    dropdown_status = 'open';
+    //console.log('open');
+}
+
+//even when dropdown is closed
+window.onclick = function (event) {
+    if (dropdown_status == 'open') {
+        dropdown_status = 'closed'
+            //console.log('closed');
+
+            var dropdown_selection = JSON.parse('["' + (getValues('demo-ajax')).join('","') + '"]')
+            //console.log(dropdown_selection);
+			removeAllMarkers();
+
+			// add GeoJSON layer to the map once the file is loaded
+			addmarkers(dropdown_selection);
+    }
+
+}
+
+function buildSelect(data, divId, SelectId) {
+    let anOption;
+    let div = document.getElementById(divId);
+    div.innerHTML = "";
+    let elem = document.createElement("select");
+    elem.setAttribute('id', SelectId);
+    elem.setAttribute('multiple', 'true');
+    elem.setAttribute('size', '1');
+    div.appendChild(elem);
+    data.forEach(function (x) {
+        anOption = document.createElement("option");
+        anOption.text = x.name //x.id + ' - ' + x.name; //display dropdown
+        anOption.value = x.name; //value of selection
+
+        elem.appendChild(anOption);
+
+    });
+
+}
+
+function getValues(id) {
+    let result = [];
+    let collection = document.querySelectorAll("#" + id + " option");
+    collection.forEach(function (x) {
+        if (x.selected) {
+            result.push(x.value);
+        }
+    });
+    return result;
+}
+
+
+</script>
+
+</body>
+</html>

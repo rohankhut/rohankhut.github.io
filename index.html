@@ -1,0 +1,889 @@
+<!-- Dual Filter -->
+<!DOCTYPE html>
+<html>
+<title>Leaflet Map</title>
+
+<head>
+	
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	
+	
+	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+	
+	<script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+		
+	<link rel="stylesheet" href="./vanillaSelectBox.css">
+	<script src="./vanillaSelectBox.js"></script>
+	
+	<link rel="stylesheet" href="./L-control-sidebar.css" />
+	<script src="./L-control-sidebar.js"></script>
+	
+	
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	
+	
+	
+	
+	
+	
+	<style>
+
+		
+		#WOTypeBtnDiv, #LocationBtnDiv {
+			font-size: 16px;
+			z-index: 1;
+			<!-- position: absolute;  -->
+			left: 0px;
+			width: 300px;
+			display = block;	
+		}
+		
+
+		
+		
+		#Details, #WOSummaryTab {
+			font-size: 100px;
+			border:1px;
+			z-index: 1;
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			width: 250px;
+			display = block;
+			background-color:lightblue;
+			padding:10px;
+			opacity: 0.8;
+			border-radius: 10px;
+			font-family:helvetica;
+		}
+		
+		#WODetailsTab {
+			font-size: 10px;
+			border:1px solid;
+			table-border:1px solid;
+			z-index: 1;
+			position: absolute;
+			top: 10px;
+			width: 80%;
+			display = block;
+			background-color:lightblue;
+			padding:10px;
+			opacity: 1;
+			border-radius: 10px;
+		}
+		
+		
+	
+		
+	
+		html, body {
+			height: 100%;
+			width: 100%;
+			margin:0; 
+			padding:0; 
+			border:none;
+		}
+		
+		#map {
+			width: 100%;
+			height: 100%;
+			position: fixed;
+		}
+		
+		<!-- .vsb-main button -->
+		<!-- { -->
+			<!-- max-width: 900px; -->
+			<!-- width: 900px; -->
+		<!-- } -->
+		
+		.marker-cluster div {
+			width: 30px;
+			height: 30px;
+			margin-left: 5px;
+			margin-top: 5px;
+
+			text-align: center;
+			border-radius: 30px;
+			font: 18px "Helvetica Neue", Arial, Helvetica, sans-serif;
+		}
+		
+		.marker-cluster-small {
+			background-color: green; 
+		}
+		
+		.marker-cluster-medium {
+			background-color: orange; 
+		}
+		
+		.marker-cluster-large {
+			background-color: red; 
+		}
+
+		
+		<!-- #sidebar:not(.collapsed) { -->
+		  <!-- width: 350px !important -->
+		<!-- } -->
+
+		#sidebar.collapsed
+		{
+			height:40px;
+			width:30px;
+		}
+	
+		.sidebar-left.collapsed ~ .sidebar-map .leaflet-left
+		{
+			left:0px;
+			top:50px;
+		}
+		
+		
+
+
+	</style>
+	
+</head> 
+
+
+	
+
+	   
+
+
+<body>
+	<!-- Our web map and content will go here -->
+
+	<div id="sidebar" class="sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+                <li><a href="#home" role="tab"><p style="font-size:20px; font-weight:bold; margin:auto; margin-left:-10px">&#8942;</p></a></li>
+				<li><a href="#wo" role="tab"><p style="font-size:10px; font-weight:bold; margin:auto; margin-left:-10px">>></p></a></li>
+				
+            </ul>
+
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content" style="">
+            <div class="sidebar-pane" id="home">
+                <h1 class="sidebar-header">Summary</h1>
+				<h2>WO Summary:</h2>
+				<tr><div id="WOSummaryTab" style="position:relative;"></div></tr>
+				<br><br>
+				<h2>Filters:</h2>
+				<table>
+				<tr>Location</tr>
+				<br>
+				<tr><div id="LocationBtnDiv"></div></tr>
+				<br>
+				<tr>WO Type</tr>
+				<tr><div id="WOTypeBtnDiv"></div></tr>
+				<br><br><br><br><br><br>
+				<h2>Legend:</h2>
+				<tr><div id="Legend"></div></tr>
+				</table>
+            </div>
+			
+			<div class="sidebar-pane" id="wo" style="">
+                <h1 class="sidebar-header">Details</h1>
+				<h2>WO Details:</h2>
+				<tr><div id="WODetailsTab" style="position:relative;"></div></tr>
+				<br><br>
+				</table>
+            </div>
+			
+	
+	
+			
+
+        </div>
+    </div>
+
+
+
+			
+	
+	
+	<div id="map" class="sidebar-map" onclick="closeSidebar()"></div>
+	<div id="Details"></div>
+	
+	
+
+	
+	
+	
+
+<script>
+
+
+$('document').ready(function(){
+	var a = document.getElementsByClassName('leaflet-control-attribution leaflet-control').item(0);	
+	a.setAttribute("style","width:0px; height:0px");
+	//a.style.width = '0px'
+	
+	document.getElementsByClassName('vsb-main').item(0).setAttribute("style","width:200px");
+	document.getElementsByClassName('vsb-main').item(1).setAttribute("style","width:200px");	
+	
+   });
+
+
+
+
+// Web map code goes here
+var map = L.map('map', {
+    center: [42.362432, -71.086086],
+    zoom: 14
+});
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {}).addTo(map);
+
+
+
+// Null variable that will hold our MarkerJsonData
+var MarkerPoints = null;
+
+var MarkerJsonData = 
+<!-- { -->
+    <!-- "features": [ -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST01","id": "SB","name": "Starbucks","coordinates": [-71.047749, 42.343884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST012","id": "SB","name": "Starbucks","coordinates": [-71.047749, 42.343884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST02","id": "SB","name": "Starbucks","coordinates": [-71.107749, 42.3764884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST03","id": "SB","name": "Starbucks","coordinates": [-71.07749, 42.365984]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST04","id": "SB","name": "Starbucks","coordinates": [-71.077749, 42.366884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST05","id": "SB","name": "Starbucks","coordinates": [-71.097749, 42.367884]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST06","id": "SB","name": "Starbucks","coordinates": [-71.047749, 42.368884]}}, -->
+					
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST07","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.083372, 42.359104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST08","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.072372, 42.349104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST09","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.081372, 42.359104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST10","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.084372, 42.369104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST11","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.085372, 42.359104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST12","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.086372, 42.359104]}}, -->
+					
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST13","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083172, 42.362104]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083272, 42.365204]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083372, 42.365304]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083472, 42.365404]}}, -->
+					<!-- {"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083572, 42.365504]}} -->
+				<!-- ] -->
+<!-- }; -->
+
+{
+    "features": [
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10001"	,"WOType": "BRKD"	,"AssetCode": "A10001"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10002"	,"WOType": "BRKD"	,"AssetCode": "A10002"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10003"	,"WOType": "BRKD"	,"AssetCode": "A10003"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10004"	,"WOType": "CORR"	,"AssetCode": "A10004"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10005"	,"WOType": "BRKD"	,"AssetCode": "A10005"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10006"	,"WOType": "BRKD"	,"AssetCode": "A10006"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10007"	,"WOType": "CORR"	,"AssetCode": "A10007"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,"coordinates": 	[-0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10008"	,"WOType": "PM"	,"AssetCode": "A10008"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,"coordinates": 		[-0.1769,51.5167]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10009"	,"WOType": "BRKD"	,"AssetCode": "A20001"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,"coordinates": 	[-0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10010"	,"WOType": "BRKD"	,"AssetCode": "A20002"	,"AssetClass": "Coach"	,"Location": "London's Kings Cross Station"	,"coordinates": 	[-0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10011"	,"WOType": "CORR"	,"AssetCode": "A20003"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,"coordinates": 	[-0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10012"	,"WOType": "BRKD"	,"AssetCode": "A20004"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,"coordinates": 	[-0.1246,51.5347]	}},
+								
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10013"	,"WOType": "BRKD"	,"AssetCode": "A30001"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10014"	,"WOType": "CORR"	,"AssetCode": "A30002"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10015"	,"WOType": "CORR"	,"AssetCode": "A30003"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10016"	,"WOType": "BRKD"	,"AssetCode": "A30004"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10017"	,"WOType": "BRKD"	,"AssetCode": "A30005"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10018"	,"WOType": "CORR"	,"AssetCode": "A30006"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10019"	,"WOType": "CORR"	,"AssetCode": "A30007"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10020"	,"WOType": "BRKD"	,"AssetCode": "A30008"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10021"	,"WOType": "CORR"	,"AssetCode": "A30009"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10022"	,"WOType": "BRKD"	,"AssetCode": "A30011"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10023"	,"WOType": "BRKD"	,"AssetCode": "A30012"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10024"	,"WOType": "CORR"	,"AssetCode": "A30013"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10025"	,"WOType": "PM"	,"AssetCode": "A30014"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,"coordinates": 	[-0.08700809, 51.505894, ]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10026"	,"WOType": "BRKD"	,"AssetCode": "A40001"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,"coordinates": 	[-0.0028,51.5415]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10027"	,"WOType": "CORR"	,"AssetCode": "A40002"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,"coordinates": 	[-0.0028,51.5415]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10028"	,"WOType": "BRKD"	,"AssetCode": "A40003"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,"coordinates": 	[-0.0028,51.5415]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10029"	,"WOType": "BRKD"	,"AssetCode": "A50001"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,"coordinates": 	[-0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10030"	,"WOType": "CORR"	,"AssetCode": "A50002"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,"coordinates": 	[-0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10031"	,"WOType": "PM"	,"AssetCode": "A50003"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,"coordinates": 	[-0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10032"	,"WOType": "BRKD"	,"AssetCode": "A50004"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,"coordinates": 	[-0.0324,51.4765]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10033"	,"WOType": "BRKD"	,"AssetCode": "A70001"	,"AssetClass": "Train"	,"Location": "Victoria Station"	,"coordinates": 	[-0.1439,51.4952]	}},	
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10034"	,"WOType": "BRKD"	,"AssetCode": "A70002"	,"AssetClass": "Train"	,"Location": "Victoria Station"	,"coordinates": 	[-0.1439,51.4952]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10035"	,"WOType": "BRKD"	,"AssetCode": "A60001"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,"coordinates": 	[-0.1123,51.5032]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10036"	,"WOType": "CORR"	,"AssetCode": "A60002"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,"coordinates": 	[-0.1123,51.5032]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10036"	,"WOType": "MP"	,"AssetCode": "A60002"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,"coordinates": 	[-0.1123,51.5032]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10037"	,"WOType": "BRKD"	,"AssetCode": "A60003"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,"coordinates": 	[-0.1123,51.5032]	}}
+
+]};
+
+
+
+
+
+var WoType=[];
+
+var Location = [];
+
+
+for (var i = 0; i < MarkerJsonData.features.length; i++) 
+{
+	WoType.push(MarkerJsonData.features[i].geometry.WOType)
+	Location.push(MarkerJsonData.features[i].geometry.Location)
+}
+
+WoType = WoType.filter(function (x, i, a) { 
+    return a.indexOf(x) == i; 
+});
+
+
+var WoType_ARR = []
+
+for (var i = 0; i < WoType.length; i++) 
+{
+	var jsonArg = new Object();
+    jsonArg.id = i;
+    jsonArg.name = WoType[i];
+	
+	WoType_ARR.push(jsonArg)
+}
+
+
+
+
+Location = Location.filter(function (x, i, a) { 
+    return a.indexOf(x) == i; 
+});
+
+
+var Location_ARR = []
+
+for (var i = 0; i < Location.length; i++) 
+{
+	var jsonArg = new Object();
+    jsonArg.id = i;
+    jsonArg.name = Location[i];
+	
+	Location_ARR.push(jsonArg)
+}
+
+
+
+// initial load all markers
+MarkerPoints = L.geoJson(MarkerJsonData, {
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup
+		(
+			feature.geometry.Location
+			+'<br> WO Code - '+ feature.geometry.WOCode
+			+'<br> WO Type - '+ feature.geometry.WOType
+			+'<br> Asset - '+ feature.geometry.AssetCode
+			+'<br> Asset Type - '+ feature.geometry.AssetClass
+		
+		);
+		
+		layer.on('mouseover', function (e) {
+            this.openPopup();
+        });
+		layer.on('mouseout', function (e) {
+            this.closePopup();
+        });
+		
+    }
+})
+
+
+const yellow = 5;
+const red = 10;
+
+document.getElementById("Legend").innerHTML= '<style>th, td, table {  padding-bottom: 10px;text-align: left; font-size: 16px; }</style><table><tr style="color:Green;"><th>Green</th><th>:</th><th>0 To '+yellow+'</th></tr><tr style="color:#f29600;"><th>Yellow</th><th>:</th><th>'+ (yellow+1) +' To '+red+'</th></tr><tr style="color:red;"><th>Red</th><th>:</th><th>> '+red+'</th></tr></table>';
+
+var MarkerCluster = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    maxClusterRadius: 60,
+    iconCreateFunction: function (cluster) {
+        var childCount = cluster.getChildCount();
+        var c = ' marker-cluster-';
+        if (childCount <= yellow) {
+            c += 'small';
+        } else if (childCount < red) {
+            c += 'medium';
+        } else {
+            c += 'large';
+        }
+
+        return new L.DivIcon({
+            html: '<div><span>' + childCount + '</span></div>',
+            className: 'marker-cluster' + c,
+            iconSize: new L.Point(40, 40)
+        });
+    }
+});
+	
+MarkerCluster.addLayer(MarkerPoints)
+map.addLayer(MarkerCluster);
+map.fitBounds(MarkerCluster.getBounds());
+
+//console.log(MarkerCluster._topClusterLevel.getAllChildMarkers());
+
+var WOSumtable = WOSummary(MarkerCluster._topClusterLevel.getAllChildMarkers())
+
+var WOSummaryTable = '<table style="text-align:left">'+WOSumtable.innerHTML+'</table>'
+document.getElementById('Details').innerHTML = WOSummaryTable;
+document.getElementById('WOSummaryTab').innerHTML = WOSummaryTable;
+
+var WODettable = WODetails(MarkerCluster._topClusterLevel.getAllChildMarkers()).innerHTML
+var WODetailsTable = '<style>th, td, table {  padding-bottom: 5px; padding-right: 10px;text-align: left; font-size: 12px; }</style><table>' + WODettable +'</table>'
+document.getElementById('WODetailsTab').innerHTML = WODetailsTable;
+
+
+
+MarkerCluster.on('clustermouseover', function (a) {
+    
+    var markers = a.layer.getAllChildMarkers();
+	
+	var table = WOSummary(markers);
+    
+	map.openPopup( table, a.layer.getLatLng());
+			
+			
+});
+
+
+MarkerCluster.on('clustermouseout', function (e) {
+  map.closePopup();
+});
+
+
+
+// Function to remove markers
+function removeAllMarkers() {
+    MarkerCluster.removeLayer(MarkerPoints)
+	map.removeLayer(MarkerCluster);
+};
+
+// Function to add markers
+function addmarkers(filter_list, filter_type) {
+    MarkerCluster.removeLayer(MarkerPoints)
+	map.removeLayer(MarkerCluster);
+	
+
+
+	
+    // add GeoJSON layer to the map once the file is loaded
+    MarkerPoints = L.geoJson(MarkerJsonData, {
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup
+					(
+						feature.geometry.Location
+						+'<br> WO Code - '+ feature.geometry.WOCode
+						+'<br> WO Type - '+ feature.geometry.WOType
+						+'<br> Asset - '+ feature.geometry.AssetCode
+						+'<br> Asset Type - '+ feature.geometry.AssetClass
+					
+					);
+					
+					
+			layer.on('mouseover', function (e) {
+				this.openPopup();
+			});
+			layer.on('mouseout', function (e) {
+				this.closePopup();
+			});
+		
+        },
+        filter: function (feature, layer) {
+            //return feature.geometry.name == "MOD"
+
+            if (filter_list.WOType.length > 0 && filter_list.Location.length > 0) {
+                for (i = 0; i < filter_list.WOType.length; i++) 
+				{
+					for (j = 0; j < filter_list.Location.length; j++) 
+					{
+						if ( (feature.geometry.WOType === filter_list.WOType[i] && feature.geometry.Location === filter_list.Location[j] ) ) 
+						{
+							return true;
+						}
+					
+					}
+				}
+
+            } else {
+                return true;
+            }
+
+
+        }
+    })
+	
+	MarkerCluster.addLayer(MarkerPoints)
+	map.addLayer(MarkerCluster);
+	map.fitBounds(MarkerCluster.getBounds());
+	
+	var WOSumtable = WOSummary(MarkerCluster._topClusterLevel.getAllChildMarkers())
+
+	var WOSummaryTable = '<table style="text-align:left">'+WOSumtable.innerHTML+'</table>'
+	document.getElementById('Details').innerHTML = WOSummaryTable;
+	document.getElementById('WOSummaryTab').innerHTML = WOSummaryTable;
+
+	var WODettable = WODetails(MarkerCluster._topClusterLevel.getAllChildMarkers()).innerHTML
+	var WODetailsTable = '<style>th, td, table {  padding-bottom: 20px; padding-right: 30px;text-align: left; font-size: 16px; }</style><table>' + WODettable +'</table>'
+	document.getElementById('WODetailsTab').innerHTML = WODetailsTable;
+
+	
+	
+	
+
+};
+
+
+
+
+
+
+
+
+var dropdown_status = "x";
+
+var filter_list_data = WoType_ARR;
+
+buildSelectWoType(filter_list_data, "WOTypeBtnDiv", "WOTypeBtn");
+var WoTypeVSB = new vanillaSelectBox("#WOTypeBtn", {
+    "maxHeight": 200,
+    "search": true,
+    translations: {
+        "all": "All",
+        "items": "WO Types Selected"
+    }
+});
+WoTypeVSB.setValue('all');
+document.getElementById("btn-group-#WOTypeBtn").addEventListener("click", dropdown_open);
+
+
+function buildSelectWoType(data, divId, SelectId) {
+    let anOption;
+    let div = document.getElementById(divId);
+    div.innerHTML = "";
+    let elem = document.createElement("select");
+    elem.setAttribute('id', SelectId);
+    elem.setAttribute('multiple', 'true');
+    elem.setAttribute('size', '1');
+    div.appendChild(elem);
+    data.forEach(function (x) {
+        anOption = document.createElement("option");
+        anOption.text = x.name //x.id + ' - ' + x.name; //display dropdown
+        anOption.value = x.name; //value of selection
+
+        elem.appendChild(anOption);
+
+    });
+
+}
+
+function getWoTypeValues(id) {
+    let result = [];
+    let collection = document.querySelectorAll("#" + id + " option");
+    collection.forEach(function (x) {
+        if (x.selected) {
+            result.push(x.value);
+        }
+    });
+    return result;
+}
+
+
+
+
+
+
+
+
+//console.log(filter_list_data);
+
+buildSelectLocation(Location_ARR, "LocationBtnDiv", "LocationBtn");
+var LocationVSB = new vanillaSelectBox("#LocationBtn", {
+    "maxHeight": 200,
+    "search": true,
+    translations: {
+        "all": "All",
+        "items": "Location Selected"
+    }
+});
+LocationVSB.setValue('all');
+document.getElementById("btn-group-#LocationBtn").addEventListener("click", dropdown_open);
+
+
+function buildSelectLocation(data, divId, SelectId) {
+    let anOption;
+    let div = document.getElementById(divId);
+    div.innerHTML = "";
+    let elem = document.createElement("select");
+    elem.setAttribute('id', SelectId);
+    elem.setAttribute('multiple', 'true');
+    elem.setAttribute('size', '1');
+    div.appendChild(elem);
+    data.forEach(function (x) {
+        anOption = document.createElement("option");
+        anOption.text = x.name //x.id + ' - ' + x.name; //display dropdown
+        anOption.value = x.name; //value of selection
+
+        elem.appendChild(anOption);
+
+    });
+
+}
+
+function getLocationValues(id) {
+    let result = [];
+    let collection = document.querySelectorAll("#" + id + " option");
+    collection.forEach(function (x) {
+        if (x.selected) {
+            result.push(x.value);
+        }
+    });
+    return result;
+}
+
+
+
+
+
+
+function dropdown_open() {
+    dropdown_status = 'open';
+    //console.log('open');
+}
+
+//even when dropdown is closed
+window.onclick = function (event) {
+    if (dropdown_status == 'open') {
+        dropdown_status = 'closed'
+            //console.log('closed');
+					
+			if (getWoTypeValues('WOTypeBtn').length == 0)
+			{
+				WoTypeVSB.setValue('all');
+			}
+			
+			if (getWoTypeValues('LocationBtn').length == 0)
+			{
+				LocationVSB.setValue('all');
+			}
+			
+
+            var dropdown_selection_wotype 	= JSON.parse('["' + (getWoTypeValues('WOTypeBtn')).join('","') + '"]')
+			var dropdown_selection_location = JSON.stringify(getLocationValues('LocationBtn'))
+			var dropdown_selection = JSON.parse('{"WOType":'+JSON.stringify(dropdown_selection_wotype)+', "Location":'+dropdown_selection_location+'}')
+			
+			// add GeoJSON layer to the map once the file is loaded
+			//console.log(dropdown_selection)
+			removeAllMarkers();
+			addmarkers(dropdown_selection);
+			
+			
+			
+    }
+
+
+
+}
+
+
+var sidebar = L.control.sidebar('sidebar',{
+				position: 'left'
+			}).addTo(map);
+
+
+
+function closeSidebar() 
+{
+	//console.log(sidebar);
+	document.querySelector('.sidebar').style.width = '30px'
+	sidebar.close()
+	document.querySelector('.leaflet-control-zoom').style.left = '0px'
+	//console.log('Close')
+	//document.getElementById('map').setAttribute("style","left:0%");
+}
+
+
+
+sidebar.on('content', function (e) {
+  const sidebarElement = document.querySelector('.sidebar')
+	console.log(e.id)  
+  switch (e.id) {
+    case 'home':
+      sidebarElement.style.width = '350px'
+      sidebarElement.style.maxWidth = '1000px'
+	  document.querySelector('.leaflet-control-zoom').style.left = '-100px'
+      break
+    case 'wo':
+      sidebarElement.style.width = '650px'
+      sidebarElement.style.maxWidth = '5000px'
+	  document.querySelector('.leaflet-control-zoom').style.left = '150px'
+      break
+  }
+})
+
+
+
+
+
+
+
+
+function WOSummary(markers)
+{
+
+var html = ''; 
+	var arr = [];
+	//console.log(markers.length)
+	//console.log(markers)
+	//console.log(_.uniqBy(markers, 'geometry'))
+	
+    for (var i = 0; i < markers.length; i++) {
+		
+		//console.log(markers[i].feature.geometry)
+		arr.push(markers[i].feature.geometry)
+        var name = ''//markers[i].feature.geometry.WOCode + '<br>';
+        html += name;
+    }
+	//console.log(arr)
+	
+	
+	var tempResult = {}
+
+	for(let { WOType } of arr)
+	  tempResult[WOType] = { 
+		  WOType,
+		  Count: tempResult[WOType] ? tempResult[WOType].Count + 1 : 1
+	  }      
+
+	let result = Object.values(tempResult)
+
+	//console.log(JSON.stringify(result))
+	
+	arrItems = result
+	
+	
+	 // EXTRACT VALUE FOR TABLE HEADER.
+            var col = [];
+            for (var i = 0; i < arrItems.length; i++) {
+                for (var key in arrItems[i]) {
+                    if (col.indexOf(key) === -1) {
+                        col.push(key);
+                    }
+                }
+            }
+
+            // CREATE DYNAMIC TABLE.
+            var table = document.createElement("table");
+
+            // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+            var tr = table.insertRow(-1);                   // TABLE ROW.
+
+            for (var i = 0; i < col.length; i++) {
+                var th = document.createElement("th");      // TABLE HEADER.
+                th.innerHTML = col[i];
+                tr.appendChild(th);
+            }
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            for (var i = 0; i < arrItems.length; i++) {
+
+                tr = table.insertRow(-1);
+
+                for (var j = 0; j < col.length; j++) {
+                    var tabCell = tr.insertCell(-1);
+                    tabCell.innerHTML = arrItems[i][col[j]];
+                }
+            }
+			
+			var row = table.insertRow(0);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			cell1.innerHTML = "<h3>Total Work Orders - </h3>";
+			cell2.innerHTML = "<h3>"+ markers.length + "</h3>";	
+			
+			
+			return table;
+			
+			
+
+}
+
+
+
+
+function WODetails(markers)
+{
+
+//console.log(markers.length);
+var arr = [];	
+    for (var i = 0; i < markers.length; i++) {
+		
+		//console.log(markers[i].feature.geometry)
+		arr.push(markers[i].feature.geometry)
+    }
+	
+	//console.log(arr)
+	
+	var arrItems = arr;
+	
+		 // EXTRACT VALUE FOR TABLE HEADER.
+            var col = [];
+            for (var i = 0; i < arrItems.length; i++) {
+                for (var key in arr[i]) {
+                    if (col.indexOf(key) === -1 && key != 'type' && key != 'coordinates') {
+						col.push(key);
+                    }
+                }
+            }
+
+		//console.log(col)
+
+            // CREATE DYNAMIC TABLE.
+            var table = document.createElement("table");
+			
+			
+		 var tr = table.insertRow(-1);                   // TABLE ROW.
+
+            for (var i = 0; i < col.length; i++) {
+                var th = document.createElement("th");      // TABLE HEADER.
+                th.innerHTML = col[i];
+                tr.appendChild(th);
+            }
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            for (var i = 0; i < arrItems.length; i++) {
+
+                tr = table.insertRow(-1);
+
+                for (var j = 0; j < col.length; j++) {
+                    var tabCell = tr.insertCell(-1);
+                    tabCell.innerHTML = arrItems[i][col[j]];
+                }
+            }
+	
+			return table;
+
+
+}
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

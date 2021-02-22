@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<title>Leaflet Map</title>
+
+<head>
+	
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+	
+	<script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+		
+	<link rel="stylesheet" href="./vanillaSelectBox.css">
+	<script src="./vanillaSelectBox.js"></script>
+	
+	
+	
+	<style>
+
+		
+		#demo-ajax {
+			font-size: 14px;
+			z-index: 1;
+			position: absolute; 
+			left: 50px;
+			width: 300px;
+			display = block;
+
+
+
+			
+		}
+		
+		html, body {
+			height: 100%;
+			width: 100%;
+			margin:0; 
+			padding:0; 
+			border:none;
+		}
+		
+		#map {
+			width: 100%;
+			height: 100%;
+			position: fixed;
+		}
+		
+		.vsb-main button
+		{
+			max-width: 400px;
+			width: 400px;
+		}
+		
+
+
+	</style>
+	
+</head> 
+
+
+	
+
+	   
+
+
+<body>
+	<!-- Our web map and content will go here -->
+	
+
+	<div id="demo-ajax"></div>
+	<div id="map" style=""></div>
+
+	
+
+	
+	
+	
+
+<script>
+
+var dropdown_status = "x";
+
+var filter_list_data = [{
+        "id": "SB",
+        "name": "Starbucks"
+    }, {
+        "id": "DD",
+        "name": "Dunkin Donuts"
+    }, {
+        "id": "MOD",
+        "name": "Mad Over Donuts"
+    }
+]
+
+buildSelect(filter_list_data, "demo-ajax", "demo-ajax-select");
+var peopleVSB = new vanillaSelectBox("#demo-ajax-select", {
+    "maxHeight": 200,
+    "search": true,
+    translations: {
+        "all": "All",
+        "items": "values"
+    }
+});
+
+document.getElementById("btn-group-#demo-ajax-select").addEventListener("click", dropdown_open);
+
+function dropdown_open() {
+    dropdown_status = 'open';
+    //console.log('open');
+}
+
+//even when dropdown is closed
+window.onclick = function (event) {
+    if (dropdown_status == 'open') {
+        dropdown_status = 'closed'
+            //console.log('closed');
+
+            var dropdown_selection = JSON.parse('["' + (getValues('demo-ajax')).join('","') + '"]')
+            console.log(dropdown_selection);
+			removeAllMarkers();
+
+			// add GeoJSON layer to the map once the file is loaded
+			addmarkers(dropdown_selection);
+    }
+
+}
+
+function buildSelect(data, divId, SelectId) {
+    let anOption;
+    let div = document.getElementById(divId);
+    div.innerHTML = "";
+    let elem = document.createElement("select");
+    elem.setAttribute('id', SelectId);
+    elem.setAttribute('multiple', 'true');
+    elem.setAttribute('size', '1');
+    div.appendChild(elem);
+    data.forEach(function (x) {
+        anOption = document.createElement("option");
+        anOption.text = x.id + ' - ' + x.name; //display dropdown
+        anOption.value = x.id; //value of selection
+
+        elem.appendChild(anOption);
+
+    });
+
+}
+
+function getValues(id) {
+    let result = [];
+    let collection = document.querySelectorAll("#" + id + " option");
+    collection.forEach(function (x) {
+        if (x.selected) {
+            result.push(x.value);
+        }
+    });
+    return result;
+}
+
+
+
+
+
+
+
+
+// Web map code goes here
+var map = L.map('map', {
+    center: [42.362432, -71.086086],
+    zoom: 14
+});
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {}).addTo(map);
+
+
+
+// Null variable that will hold our MarkerJsonData
+var MarkerPoints = null;
+
+var MarkerJsonData = 
+{
+    "features": [
+					{"type": "Feature","geometry": {"type": "Point","code": "AST01","id": "SB","name": "Starbucks","coordinates": [-71.047749, 42.343884]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST02","id": "SB","name": "Starbucks","coordinates": [-71.107749, 42.3764884]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST03","id": "SB","name": "Starbucks","coordinates": [-71.07749, 42.365984]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST04","id": "SB","name": "Starbucks","coordinates": [-71.077749, 42.366884]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST05","id": "SB","name": "Starbucks","coordinates": [-71.097749, 42.367884]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST06","id": "SB","name": "Starbucks","coordinates": [-71.047749, 42.368884]}},
+					
+					{"type": "Feature","geometry": {"type": "Point","code": "AST07","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.083372, 42.359104]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST08","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.072372, 42.349104]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST09","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.081372, 42.359104]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST10","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.084372, 42.369104]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST11","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.085372, 42.359104]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST12","id": "MOD","name": "Mad Over Donuts","coordinates": [-71.086372, 42.359104]}},
+					
+					{"type": "Feature","geometry": {"type": "Point","code": "AST13","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083172, 42.362104]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083272, 42.365204]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083372, 42.365304]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083472, 42.365404]}},
+					{"type": "Feature","geometry": {"type": "Point","code": "AST14","id": "DD","name": "Dunkin Donuts","coordinates": [-72.083572, 42.365504]}}
+				]
+};
+
+// initial load all markers
+MarkerPoints = L.geoJson(MarkerJsonData, {
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(feature.geometry.code);
+    }
+})
+
+
+const yellow = 5;
+const red = 10;
+
+var MarkerCluster = L.markerClusterGroup({
+    spiderfyOnMaxZoom: false,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    maxClusterRadius: 60,
+    iconCreateFunction: function (cluster) {
+        var childCount = cluster.getChildCount();
+        var c = ' marker-cluster-';
+        if (childCount < yellow) {
+            c += 'small';
+        } else if (childCount < red) {
+            c += 'medium';
+        } else {
+            c += 'large';
+        }
+
+        return new L.DivIcon({
+            html: '<div><span>' + childCount + '</span></div>',
+            className: 'marker-cluster' + c,
+            iconSize: new L.Point(40, 40)
+        });
+    }
+});
+	
+
+	
+MarkerCluster.addLayer(MarkerPoints)
+map.addLayer(MarkerCluster);
+map.fitBounds(MarkerCluster.getBounds());
+
+
+// Function to remove markers
+function removeAllMarkers() {
+    MarkerCluster.removeLayer(MarkerPoints)
+	map.removeLayer(MarkerCluster);
+};
+
+// Function to add markers
+function addmarkers(filter_list) {
+    MarkerCluster.removeLayer(MarkerPoints)
+	map.removeLayer(MarkerCluster);
+	
+
+
+	
+    // add GeoJSON layer to the map once the file is loaded
+    MarkerPoints = L.geoJson(MarkerJsonData, {
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.geometry.code);
+        },
+        filter: function (feature, layer) {
+            //return feature.geometry.name == "MOD"
+
+            if (filter_list.length > 0) {
+                for (i = 0; i < filter_list.length; i++) {
+                    if (feature.geometry.id === filter_list[i]) {
+                        return true;
+                    }
+                }
+
+            } else {
+                return true;
+            }
+
+        }
+    })
+	
+	MarkerCluster.addLayer(MarkerPoints)
+	map.addLayer(MarkerCluster);
+	map.fitBounds(MarkerCluster.getBounds());
+
+};
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+    "features": [
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10001"	,"WOType": "Breakdown"	,"AssetCode": "A10001"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,coordinates: 	[0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10002"	,"WOType": "Breakdown"	,"AssetCode": "A10002"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,coordinates: 	[0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10003"	,"WOType": "Breakdown"	,"AssetCode": "A10003"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,coordinates: 	[0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10004"	,"WOType": "Corrective"	,"AssetCode": "A10004"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,coordinates: 	[0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10005"	,"WOType": "Breakdown"	,"AssetCode": "A10005"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,coordinates: 	[0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10006"	,"WOType": "Breakdown"	,"AssetCode": "A10006"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,coordinates: 	[0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10007"	,"WOType": "Corrective"	,"AssetCode": "A10007"	,"AssetClass": "Coach"	,"Location": "Paddington Station"	,coordinates: 	[0.1769,51.5167]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10008"	,"WOType": "Breakdown"	,"AssetCode": "A10008"	,"AssetClass": "Train"	,"Location": "Paddington Station"	,coordinates: 	[0.1769,51.5167]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10009"	,"WOType": "Breakdown"	,"AssetCode": "A20001"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,coordinates: 	[0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10010"	,"WOType": "Breakdown"	,"AssetCode": "A20002"	,"AssetClass": "Coach"	,"Location": "London's Kings Cross Station"	,coordinates: 	[0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10011"	,"WOType": "Corrective"	,"AssetCode": "A20003"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,coordinates: 	[0.1246,51.5347]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10012"	,"WOType": "Breakdown"	,"AssetCode": "A20004"	,"AssetClass": "Train"	,"Location": "London's Kings Cross Station"	,coordinates: 	[0.1246,51.5347]	}},
+								
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10013	,"WOType": "Breakdown"	,"AssetCode": "A30001"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10014"	,"WOType": "Corrective"	,"AssetCode": "A30002"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10015"	,"WOType": "Corrective"	,"AssetCode": "A30003"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10016"	,"WOType": "Breakdown"	,"AssetCode": "A30004"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10017	,"WOType": "Breakdown"	,"AssetCode": "A30005"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10018"	,"WOType": "Corrective"	,"AssetCode": "A30006"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10019"	,"WOType": "Corrective"	,"AssetCode": "A30007"	,"AssetClass": "Coach"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10020"	,"WOType": "Breakdown"	,"AssetCode": "A30008"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10021"	,"WOType": "Corrective"	,"AssetCode": "A30009"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10022"	,"WOType": "Breakdown"	,"AssetCode": "A30011"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10023"	,"WOType": "Breakdown"	,"AssetCode": "A30012"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10024"	,"WOType": "Corrective"	,"AssetCode": "A30013"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10025"	,"WOType": "Breakdown"	,"AssetCode": "A30014"	,"AssetClass": "Train"	,"Location": "London Bridge Station"	,coordinates: 	[0.0848,51.5043]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10026"	,"WOType": "Breakdown"	,"AssetCode": "A40001"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,coordinates: 	[0.0028,51.5415]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10027"	,"WOType": "Corrective"	,"AssetCode": "A40002"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,coordinates: 	[0.0028,51.5415]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10028"	,"WOType": "Breakdown"	,"AssetCode": "A40003"	,"AssetClass": "Train"	,"Location": "Stratford Station"	,coordinates: 	[0.0028,51.5415]	}},
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10029"	,"WOType": "Breakdown"	,"AssetCode": "A50001"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,coordinates: 	[0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10030"	,"WOType": "Corrective"	,"AssetCode": "A50002"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,coordinates: 	[0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10031"	,"WOType": "Breakdown"	,"AssetCode": "A50003"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,coordinates: 	[0.0324,51.4765]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10032"	,"WOType": "Breakdown"	,"AssetCode": "A50004"	,"AssetClass": "Train"	,"Location": "New Cross Station"	,coordinates: 	[0.0324,51.4765]	
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10033"	,"WOType": "Breakdown"	,"AssetCode": "A70001"	,"AssetClass": "Train"	,"Location": "Victoria Station"	,coordinates: 	[0.1439,51.4952]	
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10034"	,"WOType": "Breakdown"	,"AssetCode": "A70002"	,"AssetClass": "Train"	,"Location": "Victoria Station"	,coordinates: 	[0.1439,51.4952]	
+								
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10035"	,"WOType": "Breakdown"	,"AssetCode": "A60001"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,coordinates: 	[0.1123,51.5032]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10036"	,"WOType": "Corrective"	,"AssetCode": "A60002"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,coordinates: 	[0.1123,51.5032]	}},
+{"type": "Feature","geometry": {"type": "Point"	,"WOCode": "10037"	,"WOType": "Breakdown"	,"AssetCode": "A60003"	,"AssetClass": "Train"	,"Location": "Waterloo Station"	,coordinates: 	[0.1123,51.5032]	}}
+
+]};
